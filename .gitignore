@@ -1,0 +1,30 @@
+.idea/
+.vscode/
+.DS_Store
+._DS_Store
+nbproject/
+
+docker/postgresql/
+/app.pid
+
+###> symfony/framework-bundle ###
+/.env.local
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###
+###> phpunit/phpunit ###
+/phpunit.xml
+.phpunit.result.cache
+.phpunit.cache
+###< phpunit/phpunit ###
+docker-compose.override.yml
+/auth.json
+
+###> symfony/phpunit-bridge ###
+.phpunit.result.cache
+/phpunit.xml
+###< symfony/phpunit-bridge ###
+/packages/

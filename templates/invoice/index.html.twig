@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Seznam faktur{% endblock %}
+
+{% block body %}
+    <h1>Seznam faktur</h1>
+
+    <a href="
+    {{ path('invoice_new') }}
+    " class="btn btn-success mb-3">Vytvořit novou fakturu</a>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Číslo faktury</th>
+            <th>Dodavatel</th>
+            <th>Odběratel</th>
+            <th>Datum vystavení</th>
+            <th>Datum splatnosti</th>
+            <th>Celková částka</th>
+            <th>Akce</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for invoice in invoices %}
+            <tr>
+                <td>{{ invoice.invoiceNumber }}</td>
+                <td>{{ invoice.supplier }}</td>
+                <td>{{ invoice.customer }}</td>
+                <td>{{ invoice.issueDate|date('Y-m-d') }}</td>
+                <td>{{ invoice.dueDate|date('Y-m-d') }}</td>
+                <td>{{ invoice.totalSum }}</td>
+                <td>
+                    <a href="
+{{ path('invoice_edit', {id: invoice.id}) }}
+                    " class="btn btn-primary btn-sm">Upravit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">Žádné faktury nenalezeny.</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="d-flex justify-content-center navigation">
+        {{ knp_pagination_render(invoices) }}
+    </div>
+{% endblock %}

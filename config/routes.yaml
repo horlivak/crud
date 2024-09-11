@@ -1,0 +1,11 @@
+controllers:
+    resource:
+        path: ../src/Core/Controller/
+        namespace: App\Core\Controller
+    type: attribute
+
+invoices:
+    resource:
+        path: ../src/Domain/Invoice/Http/Controller
+        namespace: App\Domain\Invoice\Http\Controller
+    type: attribute

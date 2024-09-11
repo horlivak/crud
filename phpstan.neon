@@ -1,0 +1,51 @@
+parameters:
+    level: max
+
+    paths:
+        - src
+        - tests
+
+    checkExplicitMixed: true
+    checkTooWideReturnTypesInProtectedAndPublicMethods: true
+    checkUninitializedProperties: true
+    checkMissingCallableSignature: true
+    checkGenericClassInNonGenericObjectType: true
+
+    cognitive_complexity: # https://tomasvotruba.com/blog/keep-cognitive-complexity-low-with-phpstan/
+        class: 20
+        function: 8
+
+    exceptions:
+        check:
+            missingCheckedExceptionInThrows: true
+            tooWideThrowType: true
+
+    ignoreErrors:
+        - '#Method [a-zA-Z0-9\\_:\(\)]+ has a nullable return type declaration.#'
+        - '#Class App\\(Domain|DataFixtures)\\[a-zA-Z0-9\\_:\(\)\$]+ has an uninitialized property \$[a-zA-Z0-9]+. Give it default value or assign it in the constructor.#'
+        - '#Class App\\Domain\\[a-zA-Z0-9\\_:\(\)\$]+ extends generic class Symfony\\Component\\Form\\AbstractType but does not specify its types: TData#'
+        - '#Method App\\Domain\\Invoice\\Repository\\InvoiceRepository\:\:getQueryForPagination\(\) return type with generic class Doctrine\\ORM\\Query does not specify its types: TKey, TResult#'
+
+    ergebnis:
+        noExtends:
+            classesAllowedToBeExtended:
+                - Exception
+                - Symfony\Bundle\FrameworkBundle\Test\WebTestCase
+                - Symfony\Component\Console\Command\Command
+                - Symfony\Component\HttpKernel\Kernel
+                - Symfony\Bundle\FrameworkBundle\Controller\AbstractController
+                - Doctrine\Bundle\FixturesBundle\Fixture
+                - Exception
+                - Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository
+                - Doctrine\Migrations\AbstractMigration
+                - Symfony\Component\Form\AbstractType
+
+    excludePaths:
+        - src/Kernel.php
+        - tests
+
+includes:
+    - vendor/phpstan/phpstan/conf/bleedingEdge.neon
+    - vendor/symplify/phpstan-rules/config/static-rules.neon
+    - vendor/symplify/phpstan-rules/config/code-complexity-rules.neon
+    - vendor/symplify/phpstan-rules/config/naming-rules.neon

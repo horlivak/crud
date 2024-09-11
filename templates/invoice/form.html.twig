@@ -1,0 +1,113 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1 class="mt-4">{{ invoice is not defined ? 'Vytvořit novou fakturu' : 'Upravit fakturu' }}</h1>
+
+    {{ form_start(invoiceForm, {'attr': {'class': 'form-horizontal'}}) }}
+
+    <div class="form-group">
+        {{ form_label(invoiceForm.customer, 'Odběratel') }}
+        {{ form_widget(invoiceForm.customer, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(invoiceForm.customer) }}
+    </div>
+
+    <div class="form-group">
+        {{ form_label(invoiceForm.supplier, 'Dodavatel') }}
+        {{ form_widget(invoiceForm.supplier, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(invoiceForm.supplier) }}
+    </div>
+
+    <div class="form-group">
+        {{ form_label(invoiceForm.issueDate, 'Datum vystavení') }}
+        {{ form_widget(invoiceForm.issueDate, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(invoiceForm.issueDate) }}
+    </div>
+
+    <div class="form-group">
+        {{ form_label(invoiceForm.dueDate, 'Datum splatnosti') }}
+        {{ form_widget(invoiceForm.dueDate, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(invoiceForm.dueDate) }}
+    </div>
+
+    <div class="form-group">
+        {{ form_label(invoiceForm.taxDate, 'Datum zdanitelného plnění') }}
+        {{ form_widget(invoiceForm.taxDate, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(invoiceForm.taxDate) }}
+    </div>
+
+    <div class="form-group">
+        {{ form_label(invoiceForm.paymentMethod, 'Forma úhrady') }}
+        {{ form_widget(invoiceForm.paymentMethod, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(invoiceForm.paymentMethod) }}
+    </div>
+
+    <div class="d-flex align-items-center justify-content-between mt-4">
+        <h3 class="mb-0">Položky faktury</h3>
+        <button type="button" id="add-item" class="btn btn-success">Přidat položku</button>
+    </div>
+
+    <div class="form-group mt-3">
+        <div id="invoice-items" data-prototype="{{ form_widget(invoiceForm.items.vars.prototype)|e('html_attr') }}">
+            {% for itemForm in invoiceForm.items %}
+                <div class="form-group">
+                    {{ form_label(itemForm.name, 'Název položky') }}
+                    {{ form_widget(itemForm.name, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_errors(itemForm.name) }}
+
+                    {{ form_label(itemForm.quantity, 'Počet jednotek') }}
+                    {{ form_widget(itemForm.quantity, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_errors(itemForm.quantity) }}
+
+                    {{ form_label(itemForm.unitPrice, 'Cena za jednotku') }}
+                    {{ form_widget(itemForm.unitPrice, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_errors(itemForm.unitPrice) }}
+
+                    <button type="button" class="btn btn-danger mt-3 remove-item">Odstranit</button>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="text-right mt-3">  {# V Bootstrapu 5 použijte text-end místo text-right #}
+        <button type="submit" class="btn btn-primary">Uložit</button>
+        <a href="{{ path('invoice_index') }}" class="btn btn-secondary">Zpět na seznam</a>
+    </div>
+
+    {{ form_end(invoiceForm) }}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            let itemCollectionHolder = document.querySelector('#invoice-items');
+            let addItemButton = document.getElementById('add-item');
+
+            let index = itemCollectionHolder.children.length;
+
+            let prototype = itemCollectionHolder.getAttribute('data-prototype');
+
+            addItemButton.addEventListener('click', function () {
+                let newForm = prototype.replace(/__name__/g, index);
+
+                let newItem = document.createElement('div');
+                newItem.classList.add('form-group');
+                newItem.innerHTML = newForm;
+
+                let removeButton = document.createElement('button');
+                removeButton.type = 'button';
+                removeButton.classList.add('btn', 'btn-danger', 'mt-3', 'remove-item');
+                removeButton.innerText = 'Odstranit';
+                newItem.appendChild(removeButton);
+                
+                itemCollectionHolder.appendChild(newItem);
+                
+                index++;
+            });
+
+            itemCollectionHolder.addEventListener('click', function (event) {
+                if (event.target.classList.contains('remove-item')) {
+                    event.preventDefault();
+                    event.target.closest('.form-group').remove();
+                }
+            });
+        });
+    </script>
+{% endblock %}

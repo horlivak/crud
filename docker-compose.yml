@@ -1,0 +1,64 @@
+services:
+  db:
+    image: "mariadb:10.3"
+    container_name: db
+    restart: always
+    environment:
+      MYSQL_DATABASE: crud
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    volumes:
+      - el-mariadb-storage:/var/lib/mysql
+
+  db-test:
+    image: "mariadb:10.3"
+    container_name: db-test
+    restart: always
+    environment:
+      MYSQL_DATABASE: crud-test
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: username
+      MYSQL_PASSWORD: password
+    volumes:
+      - el-mariadb-storage-test:/var/lib/mysql
+
+  webserver:
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile
+    container_name: webserver
+    working_dir: /application
+    volumes:
+      - .:/application
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./docker/nginx/sites/:/etc/nginx/sites-available
+      - ./docker/nginx/conf.d/:/etc/nginx/conf.d
+    links:
+      - php
+    depends_on:
+      - php
+    restart: always
+
+  php:
+    build:
+      context: .
+      dockerfile: docker/php-fpm/Dockerfile
+    container_name: php
+    working_dir: /application
+    environment:
+      DATABASE_URL: 'mysql://user:password@db:3306/crud?serverVersion=mariadb-10.3.31&charset=utf8'
+    volumes:
+      - .:/application
+      - ./docker/php-fpm/php-ini-overrides.ini:/etc/php/8.3/fpm/conf.d/99-overrides.ini
+    expose:
+      - 9000
+
+networks:
+  default:
+    driver: bridge
+    name: crud-network
+
+volumes:
+  el-mariadb-storage:
+  el-mariadb-storage-test:

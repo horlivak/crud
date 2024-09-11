@@ -1,0 +1,17 @@
+**/.dockerignore
+**/.DS_Store
+**/._DS_Store
+nbproject/
+.idea/
+.vscode/
+.gitignore
+*.md
+
+.dockerignore
+docker-compose.yml
+docker/postgresql/data/
+**/Dockerfile
+
+.env.local
+.env.test
+var/

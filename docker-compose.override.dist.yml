@@ -1,0 +1,21 @@
+services:
+  db:
+    ports:
+      - "8082:3306"
+
+  db-test:
+    ports:
+      - "8083:3306"
+
+  webserver:
+    ports:
+      - "8080:80"
+
+  adminer:
+    image: adminer
+    ports:
+      - '8020:8080'
+
+  redis:
+    ports:
+      - "6379:6379"
